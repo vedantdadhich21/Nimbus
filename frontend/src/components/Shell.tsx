@@ -12,6 +12,7 @@ import {
   Trash2,
   Upload,
   X,
+  RotateCcw,
 } from 'lucide-react'
 import { api, IS_MOCK } from '@/lib/api'
 import { bytes, cx, num } from '@/lib/format'
@@ -47,7 +48,10 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
   return (
     <aside className="flex h-full w-full flex-col bg-paper">
       <div className="flex h-14 shrink-0 items-center gap-2.5 border-b border-line px-4">
-        <Mark size={17} className="text-ink" />
+        <div className="relative">
+          <Mark size={17} className="text-ink" />
+          <span className="absolute -right-1 -top-1 size-1.5 rounded-full bg-[color:var(--color-accent)]" />
+        </div>
         <div className="min-w-0">
           <p className="display text-[15px] leading-none tracking-[-0.02em]">NIMBUS</p>
           <p className="mt-1 font-mono text-[8.5px] uppercase tracking-[0.18em] text-faint">
@@ -66,7 +70,9 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
               className={({ isActive }) =>
                 cx(
                   'group flex h-9 items-center gap-2.5 px-2.5 font-mono text-[10px] font-medium uppercase tracking-[0.14em] transition-colors',
-                  isActive ? 'bg-ink text-paper' : 'text-muted hover:bg-raised hover:text-ink',
+                  isActive
+                    ? 'bg-[color:var(--color-accent)] text-paper'
+                    : 'text-muted hover:bg-raised hover:text-[color:var(--color-accent)]',
                 )
               }
             >
@@ -110,7 +116,7 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
             <span className="font-mono text-[10px] text-ink">{stats ? bytes(stats.usedBytes) : '—'}</span>
           </div>
           <div className="flex h-[3px] gap-px overflow-hidden bg-line">
-            <div className="h-full w-full bg-ink" />
+            <div className="h-full w-full bg-gradient-to-r from-[color:var(--color-accent)] to-[color:var(--color-accent-2)]" />
           </div>
           <div className="mt-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.1em] text-faint">
             <span>{stats ? num(stats.partCount) : 0} parts</span>
@@ -132,6 +138,20 @@ function Sidebar({ onNavigate }: { onNavigate?: () => void }) {
           </div>
           <IconButton label="Lock Nimbus" onClick={() => lock.mutate()} className="size-7">
             <Lock className="size-3.5" strokeWidth={1.5} />
+          </IconButton>
+          <IconButton label="Reset demo data" onClick={() => {
+            if (window.confirm('Reset all files and clear data?')) {
+              localStorage.removeItem('nimbus.db.v5')
+              localStorage.removeItem('nimbus.db.v6')
+              localStorage.removeItem('nimbus.db.v7')
+              localStorage.removeItem('nimbus.db.v8')
+              localStorage.removeItem('nimbus.db.v9')
+              localStorage.removeItem('nimbus.uploaded.blobs')
+              void api.resetDemo()
+              window.location.reload()
+            }
+          }} className="size-7">
+            <RotateCcw className="size-3.5" strokeWidth={1.5} />
           </IconButton>
           <Link
             to="/settings"

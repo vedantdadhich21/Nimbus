@@ -15,14 +15,19 @@ import type {
   StorageStats,
   UploadInput,
 } from './types'
-import { DEMO_VERSION, SEED_FOLDERS, createDb } from './seed'
+import { DEMO_AUDIO, DEMO_VIDEO, DEMO_VERSION, SEED_FOLDERS, createDb, demoImageFor, demoPdfFor } from './seed'
 import { hex, kindForName, mimeForKind, uid } from './format'
+import { clearUploadedBlobs, getUploadedBlobUrl } from './blobs'
 
 const STORAGE_KEY = `nimbus.db.v${DEMO_VERSION}`
 const MiB = 1024 * 1024
 
 function loadDb(): Db {
   try {
+    // Clear superseded versions only — never the key we are about to read.
+    for (let i = 0; i < DEMO_VERSION; i++) {
+      localStorage.removeItem(`nimbus.db.v${i}`)
+    }
     const raw = localStorage.getItem(STORAGE_KEY)
     if (raw) {
       const parsed = JSON.parse(raw) as Db
@@ -38,39 +43,52 @@ function loadDb(): Db {
 
 let db: Db = loadDb()
 
+export function getDb() {
+  return db
+}
+
+export function saveDb(next: Db) {
+  db = next
+  persist()
+}
+
 function migratePreviews() {
   let changed = false
+
+  const apply = (file: FileItem, next: FileItem['preview']) => {
+    if (
+      file.preview.kind === next.kind &&
+      file.preview.src === next.src &&
+      file.preview.text === next.text
+    ) {
+      return
+    }
+    file.preview = next
+    changed = true
+  }
+
   for (const file of db.files) {
-    if (file.preview.kind === 'none') {
-      if (file.kind === 'pdf') {
-        const lower = file.name.toLowerCase()
-        const src = lower.includes('dbms')
-          ? '/demo/dbms-unit3.pdf'
-          : lower.includes('operating') || lower.includes('os')
-            ? '/demo/os-unit4.pdf'
-            : lower.includes('resume')
-              ? '/demo/resume.pdf'
-              : lower.includes('syllabus')
-                ? '/demo/syllabus.pdf'
-                : '/demo/research-note.pdf'
-        file.preview = { kind: 'pdf', src }
-        changed = true
-      } else if (file.kind === 'video') {
-        file.preview = { kind: 'video', src: '/demo/lecture-clip.mp4' }
-        changed = true
-      } else if (file.kind === 'audio') {
-        file.preview = { kind: 'audio', src: '/demo/voice-memo.wav' }
-        changed = true
-      } else if (file.kind === 'image') {
-        file.preview = { kind: 'image' }
-        changed = true
-      } else if (file.kind === 'text' || file.kind === 'code') {
-        file.preview = {
-          kind: 'text',
-          text: `# ${file.name}\n\n${file.snippet || 'Stored file preview.'}\n`,
-        }
-        changed = true
-      }
+    // Uploaded bytes live in the blob store, not in the database. The viewer
+    // and thumbnails read them directly, so the stored preview only needs to
+    // name the type.
+    if (getUploadedBlobUrl(file.id)) continue
+
+    // Seeded library files carry no bytes, so give them a bundled sample of
+    // the same type. Image previews are upgraded even when an older demo
+    // database already had a bare `{ kind: 'image' }`.
+    if (file.preview.kind !== 'none' && file.kind !== 'image') continue
+
+    if (file.kind === 'pdf') {
+      apply(file, { kind: 'pdf', src: demoPdfFor(file.name) })
+    } else if (file.kind === 'video') {
+      apply(file, { kind: 'video', src: DEMO_VIDEO })
+    } else if (file.kind === 'audio') {
+      apply(file, { kind: 'audio', src: DEMO_AUDIO })
+    } else if (file.kind === 'image') {
+      const src = file.name.endsWith('.svg') ? null : demoImageFor(file.name)
+      apply(file, src ? { kind: 'image', src } : { kind: 'image' })
+    } else if (file.kind === 'text' || file.kind === 'code') {
+      apply(file, { kind: 'text', text: `# ${file.name}\n\n${file.snippet || 'Stored file preview.'}\n` })
     }
   }
   if (changed) persist()
@@ -313,21 +331,9 @@ function stats(): StorageStats {
 }
 
 function previewForUpload(name: string, kind: FileItem['kind']): FileItem['preview'] {
-  if (kind === 'pdf') {
-    const lower = name.toLowerCase()
-    const src = lower.includes('dbms')
-      ? '/demo/dbms-unit3.pdf'
-      : lower.includes('operating')
-        ? '/demo/os-unit4.pdf'
-        : lower.includes('resume')
-          ? '/demo/resume.pdf'
-          : lower.includes('syllabus')
-            ? '/demo/syllabus.pdf'
-            : '/demo/research-note.pdf'
-    return { kind: 'pdf', src }
-  }
-  if (kind === 'video') return { kind: 'video', src: '/demo/lecture-clip.mp4' }
-  if (kind === 'audio') return { kind: 'audio', src: '/demo/voice-memo.wav' }
+  if (kind === 'pdf') return { kind: 'pdf', src: demoPdfFor(name) }
+  if (kind === 'video') return { kind: 'video', src: DEMO_VIDEO }
+  if (kind === 'audio') return { kind: 'audio', src: DEMO_AUDIO }
   if (kind === 'image') return { kind: 'image' }
   if (kind === 'text' || kind === 'code') {
     return {
@@ -737,5 +743,11 @@ export const mockApi: NimbusApi = {
     db = createDb()
     db.folders = SEED_FOLDERS
     persist()
+    clearUploadedBlobs()
+    try {
+      localStorage.removeItem(STORAGE_KEY)
+    } catch {
+      // ignore
+    }
   },
 }

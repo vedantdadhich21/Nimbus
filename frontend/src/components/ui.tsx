@@ -37,9 +37,9 @@ type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger'
 type ButtonSize = 'sm' | 'md'
 
 const VARIANTS: Record<ButtonVariant, string> = {
-  primary: 'bg-ink text-paper border-ink hover:opacity-85',
-  secondary: 'bg-transparent text-ink border-line hover:border-line-strong hover:bg-raised',
-  ghost: 'bg-transparent text-muted border-transparent hover:text-ink hover:border-line',
+  primary: 'bg-[color:var(--color-accent)] text-paper border-[color:var(--color-accent)] hover:brightness-110',
+  secondary: 'bg-transparent text-ink border-line hover:border-[color:var(--color-accent)] hover:text-[color:var(--color-accent)]',
+  ghost: 'bg-transparent text-muted border-transparent hover:text-[color:var(--color-accent)] hover:border-line',
   danger: 'bg-transparent text-alert border-alert/60 hover:bg-alert hover:text-paper hover:border-alert',
 }
 

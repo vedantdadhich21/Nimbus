@@ -1,14 +1,32 @@
 import { KIND_LABEL, cx, seeded } from '@/lib/format'
+import { getUploadedBlobUrl } from '@/lib/blobs'
 import type { FileItem } from '@/lib/types'
 
 /**
  * Deterministic monochrome artwork per file, so the contact sheet looks like a
- * real library without shipping stock imagery. In production these would be
- * server-generated thumbnails; the layout does not change.
+ * real library without shipping stock imagery. When real bytes exist — an
+ * uploaded image or a bundled demo photo — those win over the artwork.
  */
 export function Thumb({ file, className, detail = false }: { file: FileItem; className?: string; detail?: boolean }) {
   const rand = seeded(file.thumbSeed)
   const type = KIND_LABEL[file.kind].toUpperCase()
+
+  const imageSrc =
+    file.kind === 'image'
+      ? getUploadedBlobUrl(file.id) ??
+        (file.preview.kind === 'image' ? file.preview.src ?? null : null)
+      : null
+
+  if (imageSrc) {
+    return (
+      <img
+        src={imageSrc}
+        alt={`${file.name} preview`}
+        loading="lazy"
+        className={cx('block h-full w-full object-cover', className)}
+      />
+    )
+  }
 
   // A tonal composition rather than abstract shapes: a photograph has a horizon,
   // a light source and subject mass, and it reads at 96px where shapes do not.

@@ -9,10 +9,12 @@ import {
   type ReactNode,
 } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
-import type { FileKind, UploadStage, UploadTask } from './types'
+import type { FileItem, FileKind, UploadStage, UploadTask } from './types'
 import { api } from './api'
 import { clamp, kindForName, uid } from './format'
 import { useToast } from '@/components/ui'
+import { registerUploadedBlob } from './blobs'
+import { getDb, saveDb } from './api-mock'
 
 const TICK = 150
 const MiB = 1024 * 1024
@@ -36,17 +38,22 @@ function ratioForKind(kind: FileKind): number | null {
   return 1
 }
 
+const taskFiles = new Map<string, File>()
+
 function makeTask(
   name: string,
   size: number,
   folderId: string | null,
   flood: boolean,
+  file?: File,
 ): UploadTask {
   const kind = kindForName(name)
   const partCount = Math.max(1, Math.min(60, Math.ceil(size / (100 * MiB))))
   const per = Math.max(1, Math.round(size / partCount))
+  const id = uid('u')
+  if (file) taskFiles.set(id, file)
   return {
-    id: uid('u'),
+    id,
     name,
     kind,
     size,
@@ -197,6 +204,45 @@ interface UploadQueueValue {
   counts: { active: number; done: number; total: number }
 }
 
+/**
+ * Keep the real bytes of an uploaded file available for previewing. A File
+ * cannot be persisted, so images, video, PDFs and audio are read into data
+ * URLs in the shared blob store; text and code are small enough to stay
+ * inline. The stored record only names the preview type, never the bytes.
+ */
+function storeUploadedContent(file: FileItem, original: File, done: () => void) {
+  const finish = (preview: FileItem['preview']) => {
+    file.preview = preview
+    const db = getDb()
+    const stored = db.files.find((item) => item.id === file.id)
+    if (stored) stored.preview = preview
+    saveDb(db)
+    done()
+  }
+
+  if (file.kind === 'text' || file.kind === 'code') {
+    const reader = new FileReader()
+    reader.onload = () => finish({ kind: 'text', text: reader.result as string })
+    reader.readAsText(original)
+    return
+  }
+
+  const kind = file.kind
+  if (kind !== 'image' && kind !== 'video' && kind !== 'pdf' && kind !== 'audio') {
+    return
+  }
+
+  const reader = new FileReader()
+  reader.onload = () => {
+    const url = reader.result as string
+    registerUploadedBlob(file.id, url)
+    // The viewer and thumbnails read the URL from the blob store, so the
+    // record only needs to carry the type.
+    finish({ kind })
+  }
+  reader.readAsDataURL(original)
+}
+
 const UploadContext = createContext<UploadQueueValue | null>(null)
 
 export function UploadProvider({ children }: { children: ReactNode }) {
@@ -223,6 +269,12 @@ export function UploadProvider({ children }: { children: ReactNode }) {
           kind: task.kind,
           compressionRatio: task.compressionRatio,
         })
+        const original = taskFiles.get(task.id)
+        if (original) {
+          storeUploadedContent(file, original, () => {
+            void queryClient.invalidateQueries()
+          })
+        }
         setTasks((prev) => prev.map((t) => (t.id === task.id ? { ...t, fileId: file.id } : t)))
         await queryClient.invalidateQueries()
         toast({
@@ -255,7 +307,7 @@ export function UploadProvider({ children }: { children: ReactNode }) {
     if (files.length === 0) return
     const next = files.map((file) => {
       created.current += 1
-      return makeTask(file.name, file.size || 1_240_000, folderId, created.current % 3 === 0)
+      return makeTask(file.name, file.size || 1_240_000, folderId, created.current % 3 === 0, file)
     })
     setTasks((prev) => [...next, ...prev])
     setCollapsed(false)

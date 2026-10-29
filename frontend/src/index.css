@@ -15,6 +15,9 @@
   --color-line: #2b2c31;
   --color-line-strong: #4d4e54;
   --color-alert: #d9704f;
+  --color-accent: #ff6b2b;
+  --color-accent-2: #22d3ee;
+  --color-accent-3: #a78bfa;
 
   --font-display: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
   --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
@@ -32,6 +35,9 @@
   --color-line: #d8d5cc;
   --color-line-strong: #b0ada3;
   --color-alert: #b04525;
+  --color-accent: #ea580c;
+  --color-accent-2: #0891b2;
+  --color-accent-3: #7c3aed;
 }
 
 @layer base {

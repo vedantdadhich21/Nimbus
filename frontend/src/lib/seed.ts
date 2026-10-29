@@ -16,7 +16,7 @@ const MiB = 1024 * 1024
 const iso = (daysAgo: number, hoursAgo = 0) =>
   new Date(Date.now() - daysAgo * DAY - hoursAgo * HOUR).toISOString()
 
-export const DEMO_VERSION = 5
+export const DEMO_VERSION = 8
 
 const folder = (id: string, name: string, parentId: string | null, daysAgo: number): Folder => ({
   id,
@@ -576,26 +576,53 @@ function compressionFor(name: string, kind: FileKind, size: number): Compression
   }
 }
 
+export const DEMO_VIDEO = '/demo/lecture-clip.mp4'
+export const DEMO_AUDIO = '/demo/voice-memo.wav'
+
+/** The demo ships one sample PDF per subject; pick it by filename. */
+export function demoPdfFor(name: string): string {
+  const lower = name.toLowerCase()
+  if (lower.includes('dbms')) return '/demo/dbms-unit3.pdf'
+  if (lower.includes('operating') || lower.includes('os')) return '/demo/os-unit4.pdf'
+  if (lower.includes('resume')) return '/demo/resume.pdf'
+  if (lower.includes('syllabus')) return '/demo/syllabus.pdf'
+  return '/demo/research-note.pdf'
+}
+
+/** Bundled sample photographs so seeded images open as real pictures. */
+export function demoImageFor(name: string): string | null {
+  const lower = name.toLowerCase()
+  if (lower.includes('fest-group')) return '/demo/photos/fest-group-photo.jpg'
+  if (lower.includes('fest-stage')) return '/demo/photos/fest-stage-01.jpg'
+  if (lower.includes('convocation')) return '/demo/photos/convocation-2026.jpg'
+  if (lower.includes('holi')) return '/demo/photos/holi-2026.jpg'
+  if (lower.includes('trek-pachmarhi-02')) return '/demo/photos/trek-pachmarhi-02.jpg'
+  if (lower.includes('trek-pachmarhi')) return '/demo/photos/trek-pachmarhi-01.jpg'
+  if (lower.includes('campus-main')) return '/demo/photos/campus-main-building.jpg'
+  if (lower.includes('key-hierarchy')) return '/demo/photos/key-hierarchy.png'
+  if (lower.includes('flood-wait')) return '/demo/photos/telegram-flood-wait.png'
+  if (lower.includes('screenshot') && lower.includes('11.42')) {
+    return '/demo/photos/Screenshot_2026-10-21_at_11.42.10.png'
+  }
+  if (lower.includes('screenshot')) return '/demo/photos/Screenshot_2026-10-19_at_09.15.44.png'
+  if (lower.includes('20260312')) return '/demo/photos/IMG_20260312_104233.jpg'
+  if (lower.includes('20260314')) return '/demo/photos/IMG_20260314_181002.jpg'
+  if (lower.includes('20261012')) return '/demo/photos/IMG_20261012_223311.jpg'
+  if (lower.includes('20250101')) return '/demo/photos/IMG_20250101_0001.jpg'
+  return null
+}
+
 function previewFor(name: string, kind: FileKind, snippet: string): PreviewInfo {
   // The demo ships a small sample asset per previewable type, so every file of
-  // that type opens a real viewer instead of an empty state. PDFs follow their
-  // filename so a document does not preview as an unrelated one.
-  if (kind === 'pdf') {
-    const lower = name.toLowerCase()
-    const src = lower.includes('dbms')
-      ? '/demo/dbms-unit3.pdf'
-      : lower.includes('operating')
-        ? '/demo/os-unit4.pdf'
-        : lower.includes('resume')
-          ? '/demo/resume.pdf'
-          : lower.includes('syllabus')
-            ? '/demo/syllabus.pdf'
-            : '/demo/research-note.pdf'
-    return { kind: 'pdf', src }
+  // that type opens a real viewer instead of an empty state. PDFs and images
+  // follow their filename so a document does not preview as an unrelated one.
+  if (kind === 'pdf') return { kind: 'pdf', src: demoPdfFor(name) }
+  if (kind === 'video') return { kind: 'video', src: DEMO_VIDEO }
+  if (kind === 'audio') return { kind: 'audio', src: DEMO_AUDIO }
+  if (kind === 'image' && !name.endsWith('.svg')) {
+    const src = demoImageFor(name)
+    return src ? { kind: 'image', src } : { kind: 'image' }
   }
-  if (kind === 'video') return { kind: 'video', src: '/demo/lecture-clip.mp4' }
-  if (kind === 'audio') return { kind: 'audio', src: '/demo/voice-memo.wav' }
-  if (kind === 'image' && !name.endsWith('.svg')) return { kind: 'image' }
   if (kind === 'text' || kind === 'code') {
     return {
       kind: 'text',

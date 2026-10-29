@@ -15,6 +15,7 @@ import {
   X,
 } from 'lucide-react'
 import { api } from '@/lib/api'
+import { getUploadedBlobUrl } from '@/lib/blobs'
 import type { FileItem } from '@/lib/types'
 import { KIND_LABEL, bytes, compressionLabel, cx, num, relTime, stamp } from '@/lib/format'
 import { Badge, Button, EmptyState, IconButton, Label, Spinner, useToast } from '@/components/ui'
@@ -238,23 +239,65 @@ function pickDemoPdf(name: string): string {
 }
 
 function Body({ file }: { file: FileItem }) {
-  const preview = file.preview.kind === 'none' && file.kind === 'pdf'
-    ? { kind: 'pdf' as const, src: pickDemoPdf(file.name) }
-    : file.preview.kind === 'none' && file.kind === 'video'
-      ? { kind: 'video' as const, src: '/demo/lecture-clip.mp4' }
-      : file.preview.kind === 'none' && file.kind === 'audio'
-        ? { kind: 'audio' as const, src: '/demo/voice-memo.wav' }
-        : file.preview.kind === 'none' && file.kind === 'image'
-          ? { kind: 'image' as const }
-          : file.preview
+  const blobUrl = getUploadedBlobUrl(file.id)
+  if (blobUrl) {
+    if (file.kind === 'image') {
+      return (
+        <div className="m-auto w-full max-w-[920px]">
+          <div className="flex max-h-[70vh] items-center justify-center border border-line overflow-hidden bg-black/40">
+            <img src={blobUrl} alt={file.name} className="max-h-[70vh] max-w-full object-contain" />
+          </div>
+          <p className="mt-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.12em] text-faint">
+            <span>fit · no download required</span>
+            <span>{file.mime}</span>
+          </p>
+        </div>
+      )
+    } else if (file.kind === 'video') {
+      return (
+        <div className="m-auto w-full max-w-[820px]">
+          <video controls preload="metadata" className="w-full border border-line bg-black" src={blobUrl} poster="" />
+          <p className="mt-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.12em] text-faint">
+            <span>http range · 1 mib blocks · seek without full download</span>
+            <span>h.264</span>
+          </p>
+        </div>
+      )
+    } else if (file.kind === 'pdf') {
+      return <PdfPreview src={blobUrl} />
+    } else if (file.kind === 'audio') {
+      return (
+        <div className="m-auto w-full max-w-[520px] border border-line p-4">
+          <div className="mb-4 aspect-[16/7] border border-line">
+            <Thumb file={file} />
+          </div>
+          <audio controls className="w-full" src={blobUrl} />
+          <p className="mt-3 font-mono text-[9px] uppercase tracking-[0.12em] text-faint">
+            streamed from local cache · waveform generated
+          </p>
+        </div>
+      )
+    } else if ((file.kind === 'text' || file.kind === 'code') && file.preview.kind === 'text' && file.preview.text) {
+      return <TextPreview text={file.preview.text} />
+    }
+  }
+
+  const preview =
+    file.preview.kind === 'none' && file.kind === 'pdf'
+      ? { kind: 'pdf' as const, src: pickDemoPdf(file.name) }
+      : file.preview
 
   if (preview.kind === 'pdf' && preview.src) return <PdfPreview src={preview.src} />
 
   if (preview.kind === 'image') {
     return (
-      <div className="m-auto w-full max-w-[720px]">
-        <div className="flex aspect-[4/3] items-center justify-center border border-line">
-          <Thumb file={file} detail />
+      <div className="m-auto w-full max-w-[920px]">
+        <div className="flex aspect-[4/3] items-center justify-center overflow-hidden border border-line bg-black/40">
+          {preview.src ? (
+            <img src={preview.src} alt={file.name} className="max-h-full max-w-full object-contain" />
+          ) : (
+            <Thumb file={file} detail />
+          )}
         </div>
         <p className="mt-2 flex items-center justify-between font-mono text-[9px] uppercase tracking-[0.12em] text-faint">
           <span>fit · no download required</span>
@@ -344,6 +387,7 @@ export function ViewerScreen() {
       await queryClient.invalidateQueries()
       toast({ title: 'Version restored' })
     },
+    onError: () => toast({ title: 'Could not restore version' }),
   })
 
   const index = siblings?.files.findIndex((f) => f.id === file?.id) ?? -1
