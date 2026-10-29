@@ -1,0 +1,91 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R] /Count 3 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 161 >>
+stream
+BT
+/F2 17 Tf
+1 0 0 1 64 720 Tm
+(CSE 2026 - Scheme and Syllabus) Tj
+/F1 10 Tf
+1 0 0 1 64 693.65 Tm
+(Rajiv Gandhi Proudyogiki Vishwavidyalaya  |  Semester V) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 362 >>
+stream
+BT
+/F2 11 Tf
+1 0 0 1 64 720 Tm
+(Theory) Tj
+/F1 10 Tf
+1 0 0 1 64 702.95 Tm
+(CS-501  Database Management Systems  |  4 credits) Tj
+/F1 10 Tf
+1 0 0 1 64 687.45 Tm
+(CS-502  Operating Systems  |  4 credits) Tj
+/F1 10 Tf
+1 0 0 1 64 671.95 Tm
+(CS-503  Software Engineering  |  3 credits) Tj
+/F1 10 Tf
+1 0 0 1 64 656.45 Tm
+(CS-504  Computer Networks  |  3 credits) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 10 0 R >>
+endobj
+10 0 obj
+<< /Length 254 >>
+stream
+BT
+/F2 11 Tf
+1 0 0 1 64 720 Tm
+(Assessment) Tj
+/F1 10 Tf
+1 0 0 1 64 702.95 Tm
+(Continuous assessment 30 marks. End semester examination 70 marks.) Tj
+/F1 10 Tf
+1 0 0 1 64 687.45 Tm
+(Minimum 75 percent attendance is required to sit the examination.) Tj
+ET
+endstream
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000127 00000 n 
+0000000224 00000 n 
+0000000326 00000 n 
+0000000462 00000 n 
+0000000674 00000 n 
+0000000810 00000 n 
+0000001223 00000 n 
+0000001360 00000 n 
+trailer
+<< /Size 11 /Root 1 0 R >>
+startxref
+1666
+%%EOF

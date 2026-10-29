@@ -1,0 +1,112 @@
+%PDF-1.4
+1 0 obj
+<< /Type /Catalog /Pages 2 0 R >>
+endobj
+2 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R 11 0 R] /Count 4 >>
+endobj
+3 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica /Encoding /WinAnsiEncoding >>
+endobj
+4 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold /Encoding /WinAnsiEncoding >>
+endobj
+5 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 6 0 R >>
+endobj
+6 0 obj
+<< /Length 155 >>
+stream
+BT
+/F2 20 Tf
+1 0 0 1 64 720 Tm
+(Unit 3 - Normalization) Tj
+/F1 11 Tf
+1 0 0 1 64 689.0 Tm
+(Database Management Systems  |  Semester V  |  Unit 3 of 5) Tj
+ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 8 0 R >>
+endobj
+8 0 obj
+<< /Length 266 >>
+stream
+BT
+/F2 12 Tf
+1 0 0 1 64 720 Tm
+(1. Functional dependency) Tj
+/F1 11 Tf
+1 0 0 1 64 701.4 Tm
+(X -> Y holds when every pair of tuples agreeing on X also agrees on Y.) Tj
+/F1 11 Tf
+1 0 0 1 64 684.35 Tm
+(Armstrong's axioms: reflexivity, augmentation, transitivity.) Tj
+ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 10 0 R >>
+endobj
+10 0 obj
+<< /Length 401 >>
+stream
+BT
+/F2 12 Tf
+1 0 0 1 64 720 Tm
+(2. Normal forms) Tj
+/F1 11 Tf
+1 0 0 1 64 701.4 Tm
+(1NF  atomic attributes, no repeating groups.) Tj
+/F1 11 Tf
+1 0 0 1 64 684.35 Tm
+(2NF  1NF and no partial dependency on a composite key.) Tj
+/F1 11 Tf
+1 0 0 1 64 667.3000000000001 Tm
+(3NF  2NF and no transitive dependency.) Tj
+/F1 11 Tf
+1 0 0 1 64 650.2500000000001 Tm
+(BCNF every determinant is a candidate key.) Tj
+ET
+endstream
+endobj
+11 0 obj
+<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Resources << /Font << /F1 3 0 R /F2 4 0 R >> >> /Contents 12 0 R >>
+endobj
+12 0 obj
+<< /Length 264 >>
+stream
+BT
+/F2 12 Tf
+1 0 0 1 64 720 Tm
+(3. Decomposition) Tj
+/F1 11 Tf
+1 0 0 1 64 701.4 Tm
+(Lossless join: the natural join of the parts reproduces the original.) Tj
+/F1 11 Tf
+1 0 0 1 64 684.35 Tm
+(Dependency preserving: every FD is enforceable inside one fragment.) Tj
+ET
+endstream
+endobj
+xref
+0 13
+0000000000 65535 f 
+0000000009 00000 n 
+0000000058 00000 n 
+0000000134 00000 n 
+0000000231 00000 n 
+0000000333 00000 n 
+0000000469 00000 n 
+0000000675 00000 n 
+0000000811 00000 n 
+0000001128 00000 n 
+0000001265 00000 n 
+0000001718 00000 n 
+0000001856 00000 n 
+trailer
+<< /Size 13 /Root 1 0 R >>
+startxref
+2172
+%%EOF

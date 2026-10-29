@@ -1,0 +1,1 @@
+function e(e){return new Worker(`/assets/pdf-worker-Dtt6U6S8.js`,{name:e?.name})}export{e as default};

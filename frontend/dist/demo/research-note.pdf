@@ -1,0 +1,108 @@
+%PDF-1.4
+%‚„œ”
+1 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica >>
+endobj
+2 0 obj
+<< /Type /Font /Subtype /Type1 /BaseFont /Helvetica-Bold >>
+endobj
+3 0 obj
+<< /Type /Pages /Kids [5 0 R 7 0 R 9 0 R] /Count 3 >>
+endobj
+4 0 obj
+<< /Length 580 >>
+stream
+BT
+/F2 22 Tf
+64 720 Td
+(Research note 04 - Local embeddings) Tj
+ET
+BT
+/F1 12 Tf
+64 676 Td
+20 TL
+(Embeddings are generated on the user's own server, while the plaintext) Tj T*
+(is still in memory. Vectors never leave the trusted environment and are) Tj T*
+(never written to Telegram. Only ciphertext is uploaded.) Tj T*
+() Tj T*
+(The query vector is encoded with the same model as the document text, so) Tj T*
+(cosine similarity compares meaning rather than exact words.) Tj T*
+ET
+0.55 G 1 w 64 640 m 531 640 l S
+BT /F1 9 Tf 64 60 Td 0.45 g (Nimbus demo document - mock data) Tj ET
+endstream
+endobj
+5 0 obj
+<< /Type /Page /Parent 3 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 4 0 R >>
+endobj
+6 0 obj
+<< /Length 498 >>
+stream
+BT
+/F2 22 Tf
+64 720 Td
+(Compression policy) Tj
+ET
+BT
+/F1 12 Tf
+64 676 Td
+20 TL
+(Plain text, code, CSV and JSON are compressed with zstd level 3.) Tj T*
+(JPEG, PNG, MP4 and archives are stored as-is: measurements show a saving) Tj T*
+(of roughly one percent, which does not justify the processor time.) Tj T*
+() Tj T*
+(Office documents and PDFs are sampled \(64 KiB\) before the decision.) Tj T*
+ET
+0.55 G 1 w 64 640 m 531 640 l S
+BT /F1 9 Tf 64 60 Td 0.45 g (Nimbus demo document - mock data) Tj ET
+endstream
+endobj
+7 0 obj
+<< /Type /Page /Parent 3 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 6 0 R >>
+endobj
+8 0 obj
+<< /Length 460 >>
+stream
+BT
+/F2 22 Tf
+64 720 Td
+(Storage map) Tj
+ET
+BT
+/F1 12 Tf
+64 676 Td
+20 TL
+(storage part    : 100 MiB, one Telegram message each) Tj T*
+(encryption block: 1 MiB, independent AES-256-GCM nonce and tag) Tj T*
+() Tj T*
+(Seeking is mapped from a byte range to the covering blocks, so playback) Tj T*
+(starts after the first block instead of the whole file.) Tj T*
+ET
+0.55 G 1 w 64 640 m 531 640 l S
+BT /F1 9 Tf 64 60 Td 0.45 g (Nimbus demo document - mock data) Tj ET
+endstream
+endobj
+9 0 obj
+<< /Type /Page /Parent 3 0 R /MediaBox [0 0 595 842] /Resources << /Font << /F1 1 0 R /F2 2 0 R >> >> /Contents 8 0 R >>
+endobj
+10 0 obj
+<< /Type /Catalog /Pages 3 0 R >>
+endobj
+xref
+0 11
+0000000000 65535 f 
+0000000015 00000 n 
+0000000085 00000 n 
+0000000160 00000 n 
+0000000229 00000 n 
+0000000860 00000 n 
+0000000996 00000 n 
+0000001545 00000 n 
+0000001681 00000 n 
+0000002192 00000 n 
+0000002328 00000 n 
+trailer
+<< /Size 11 /Root 10 0 R >>
+startxref
+2378
+%%EOF

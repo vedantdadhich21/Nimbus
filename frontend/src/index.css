@@ -1,0 +1,185 @@
+@import "tailwindcss";
+@import "@fontsource-variable/archivo/index.css";
+@import "@fontsource-variable/inter/index.css";
+@import "@fontsource/geist-mono/400.css";
+@import "@fontsource/geist-mono/500.css";
+@import "@fontsource/instrument-serif/400-italic.css";
+
+@theme {
+  --color-paper: #121316;
+  --color-raised: #17181c;
+  --color-sunken: #0d0e11;
+  --color-ink: #f2f1ee;
+  --color-muted: #9c9b96;
+  --color-faint: #6b6a67;
+  --color-line: #2b2c31;
+  --color-line-strong: #4d4e54;
+  --color-alert: #d9704f;
+
+  --font-display: "Archivo Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-sans: "Inter Variable", ui-sans-serif, system-ui, sans-serif;
+  --font-mono: "Geist Mono", ui-monospace, SFMono-Regular, Menlo, monospace;
+  --font-serif: "Instrument Serif", Georgia, serif;
+}
+
+:root[data-theme="light"] {
+  --color-paper: #f2f1ee;
+  --color-raised: #f8f7f4;
+  --color-sunken: #e8e6e0;
+  --color-ink: #121316;
+  --color-muted: #5c5b57;
+  --color-faint: #8a8880;
+  --color-line: #d8d5cc;
+  --color-line-strong: #b0ada3;
+  --color-alert: #b04525;
+}
+
+@layer base {
+  html {
+    color-scheme: dark;
+    background: var(--color-paper);
+  }
+  html[data-theme="light"] {
+    color-scheme: light;
+  }
+  body {
+    margin: 0;
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    line-height: 1.5;
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+  }
+  * {
+    border-color: var(--color-line);
+  }
+  ::selection {
+    background: var(--color-ink);
+    color: var(--color-paper);
+  }
+  :focus-visible {
+    outline: 1px solid var(--color-ink);
+    outline-offset: 2px;
+  }
+  input:focus-visible,
+  textarea:focus-visible,
+  select:focus-visible {
+    outline: none;
+  }
+  button,
+  input,
+  textarea,
+  select {
+    font: inherit;
+    color: inherit;
+  }
+  input::placeholder,
+  textarea::placeholder {
+    color: var(--color-faint);
+  }
+  ::-webkit-scrollbar {
+    width: 10px;
+    height: 10px;
+  }
+  ::-webkit-scrollbar-track {
+    background: transparent;
+  }
+  ::-webkit-scrollbar-thumb {
+    background: var(--color-line);
+    border: 2px solid var(--color-paper);
+  }
+  ::-webkit-scrollbar-thumb:hover {
+    background: var(--color-line-strong);
+  }
+}
+
+@layer components {
+  .label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 500;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--color-muted);
+  }
+  .mono {
+    font-family: var(--font-mono);
+    font-variant-ligatures: none;
+  }
+  .display {
+    font-family: var(--font-display);
+    font-weight: 600;
+    letter-spacing: -0.035em;
+    line-height: 1;
+  }
+  .serif {
+    font-family: var(--font-serif);
+    font-style: italic;
+    letter-spacing: -0.01em;
+  }
+  .grid-bg {
+    background-image:
+      linear-gradient(to right, color-mix(in srgb, var(--color-ink) 6%, transparent) 1px, transparent 1px),
+      linear-gradient(to bottom, color-mix(in srgb, var(--color-ink) 6%, transparent) 1px, transparent 1px);
+    background-size: 44px 44px;
+  }
+  .hatch {
+    background-image: repeating-linear-gradient(
+      45deg,
+      color-mix(in srgb, var(--color-ink) 12%, transparent) 0px,
+      color-mix(in srgb, var(--color-ink) 12%, transparent) 1px,
+      transparent 1px,
+      transparent 7px
+    );
+  }
+  .spec-row {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    gap: 12px;
+    align-items: baseline;
+    padding: 7px 0;
+    border-bottom: 1px solid var(--color-line);
+  }
+}
+
+@keyframes nimbus-rise {
+  from {
+    opacity: 0;
+    transform: translateY(6px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+@keyframes nimbus-fade {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+@keyframes nimbus-sweep {
+  from {
+    transform: translateX(-100%);
+  }
+  to {
+    transform: translateX(400%);
+  }
+}
+.rise {
+  animation: nimbus-rise 0.28s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+.fade {
+  animation: nimbus-fade 0.2s ease both;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .rise,
+  .fade {
+    animation: none;
+  }
+}
